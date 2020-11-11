@@ -127,6 +127,7 @@ def render_breadcrumbs(context, *args):
                                 'django_bootstrap_breadcrumbs/bootstrap2.html')
 
     links = []
+    urls = "/"
     for (label, viewname, view_args, view_kwargs) in context[
             'request'].META.get(CONTEXT_KEY, []):
         if isinstance(viewname, Model) and hasattr(
@@ -148,7 +149,12 @@ def render_breadcrumbs(context, *args):
                               kwargs=view_kwargs, current_app=current_app)
             except NoReverseMatch:
                 url = viewname
-        links.append((url, smart_text(label) if label else label))
+        
+        # Add for work with project OBSERVATORIO
+        if url != "/" :
+            urls = urls + url + "/"
+        
+        links.append((urls, smart_text(label) if label else label))
 
     if not links:
         return ''
